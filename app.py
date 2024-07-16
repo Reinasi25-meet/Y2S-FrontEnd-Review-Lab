@@ -22,6 +22,17 @@ def food1():
  		 </html>''')
 
 @app.route('/food2')    
+def food2():
+ 	return('''
+ 		<html>
+ 		<p>food page2</p>
+ 		<a href="/pet1">go to another fav pet</a>"
+ 		 <a href=\'/home\'> go back to home </a>
+ 		 </html>''')
+
+@app.route('/pet1')    
+def pet1():
+ 	return('''
  		<html>
  		<p>animals page</p>
  		 <a href=\'/home\'> go back to home </a>
