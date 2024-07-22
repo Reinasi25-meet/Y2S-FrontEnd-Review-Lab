@@ -1,0 +1,13 @@
+<!DOCTYPE html>
+<html>
+<body>
+
+	<ul>
+		{%for i in list_message.values()%}
+		<li>the name: {{i['said-by']}}, the quote: {{i["text"]}}</li>
+		{% endfor%}
+
+	</ul>
+	<a href="/home"> come back to home
+		</body>
+		</html>

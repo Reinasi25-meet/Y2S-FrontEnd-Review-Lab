@@ -1,81 +1,63 @@
-from flask import Flask
+from Flask import Flask, render_template, request , redirect, url_for
+from Flask import session as login_session
+import pyrebase 
 
-app = Flask(__name__)
 
-@app.route('/home')
+app=Flask(__name__)
+app.config["SECRET KEY"]="123456"
+
+firebase= pyrebase.initialize_app(config)
+auth=firebase.auth()
+
+
+const firebaseConfig = {
+  apiKey: "AIzaSyD4Y25q0Pa_ChBBK26h4_bI6p_vTfvibrc",
+  authDomain: "auth-lab-178d1.firebaseapp.com",
+  projectId: "auth-lab-178d1",
+  storageBucket: "auth-lab-178d1.appspot.com",
+  messagingSenderId: "171677911133",
+  appId: "1:171677911133:web:8ac94dd84aa247a0a3e5b4"}
+
+  @app.rout("/", methods=["GET,POST"]
+    def login()
+
+    if request.method == 'GET':
+        return render_template("login.html") 
+    else: #if the method is post
+        email = request.form['email']
+        password = request.form['password']
+        try:
+            login_session['user'] = auth.sign_in_with_email_and_password(email, password)
+            return redirect(url_for('home'))
+        except:
+            error = "Womp it failed sad"
+            return render_template("login.html", error=error)
+
+  @app.route('/signup', methods=["GET", "POST"])
+def signup():
+    if request.method == 'GET':
+        return render_template("signup.html") 
+    else: #if the method is post
+        email = request.form['email']
+        password = request.form['password']
+        try:
+            login_session['user'] = auth.create_user_with_email_and_password(email, password)
+            print(login_session['user'])
+            print(login_session['user']['localId'])
+            return redirect(url_for('home'))
+        except:
+            error = "Womp it failed. Try again"
+            return render_template("signup.html",error=error)
+        
+    
+@app.route('/home', methods=["GET", "POST"])
 def home():
-    return('''<html><p>welcome to my photo gallery</p>
-       <img height="500px" src="https://cdnb.artstation.com/p/assets/covers/images/012/971/631/large/wiktoria-stachowska-babazytnia-12.jpg">
-       <img src="https://www.google.com/url?sa=i&url=h983000&source=images&cd=vfe&opi=89978449&ved=0CBEQjRxqFwoTCNCriPjvq4cDFQAAAAAdAAAAABAd.jpeg">
-       <a href="/food1">go to fav food and animals</a>
-       </html>
-       ''')
-
-@app.route('/food1')    
-def food1():
- 	return('''
- 		<html>
- 		<p>food page</p>
- 		 <a href=\'/home\'> go back to home </a>
- 		 <br/>
- 		 <a href="/food2">go to another fav food</a>"
- 		 </html>''')
-
-@app.route('/food2')    
-def food2():
- 	return('''
- 		<html>
- 		<p>food page2</p>
- 		<a href="/pet1">go to another fav pet</a>"
- 		 <a href=\'/home\'> go back to home </a>
- 		 </html>''')
-
-@app.route('/pet1')    
-def pet1():
- 	return('''
- 		<html>
- 		<p>animals page</p>
- 		 <a href=\'/home\'> go back to home </a>
- 		 <br/>
- 		 <a href="/pet2">go to another fav animal</a>"
- 		 </html>''')
-
-@app.route('/pet2')    
-def pet2():
- 	return('''
- 		<html>
- 		<p>animal page2</p>
- 		 <a href=\'/home\'> go back to home </a>
- 		 </html>''')
+    if request.method == "GET":
+        return render_template("home.html")
+    else:
+        login_session['user'] = None
+        auth.current_user = None
+        return redirect(url_for('login'))
 
 if __name__ == '__main__':
     app.run(debug=True)
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
